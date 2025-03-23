@@ -8,3 +8,4 @@ Aplicação usára LLM para gerar as frases, para nunca se repitrem e para serem
 - ASP.NET CORE
 - NEXTJS (REACT)
 - FIREBASE (SÓ PELA PRATICIDADE, SE NÃO SERIA SLQ SERVER)
+No momento estamos sem banco, então foi feita uma lista para conter os dados. 
