@@ -1,0 +1,6 @@
+@APIFrase_romantica_HostAddress = http://localhost:5058
+
+GET {{APIFrase_romantica_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
