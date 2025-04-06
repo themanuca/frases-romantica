@@ -1,11 +1,19 @@
 ## Projeto Frases Romântica
- O intuito do projeto é desenvolver uma pequena aplicação que gere frases romanticas progrmada e envie para minha noiva, via whatsapp.
-Aplicação usára LLM para gerar as frases, para nunca se repitrem e para serem únicas, mas tambem para parecer que foi feita por um mim.
-
+ O intuito do projeto é desenvolver uma pequena aplicação que gere frases romanticas programada e envie para minha noiva, via whatsapp.
+Aplicação usára LLM para gerar as frases, para nunca se repitrem e para serem únicas.
+Terá um painel web com dashboard para gerenciar tudo de forma visual.
+- Modo Anônimo: Permitir que outras pessoas usem o sistema de para enviar mensagens secretas;
+- Poderá gerar as frases por temas e humor;
+- API terá um endpoint publico (*/api/frases/aleatoria*);
+- Ranking das frases mais curtidas;
+  
 ##STACKS
 - RABBITMQ;
 - DOCKER
 - ASP.NET CORE
 - NEXTJS (REACT)
-- FIREBASE (SÓ PELA PRATICIDADE, SE NÃO SERIA SLQ SERVER)
-No momento estamos sem banco, então foi feita uma lista para conter os dados. 
+- SQL Server
+- Entity Framework
+- Tailwind
+
+
