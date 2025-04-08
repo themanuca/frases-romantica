@@ -1,4 +1,8 @@
+using App.Interfaces;
+using App.Services;
+using Domain.Interfaces;
 using Infra.Data;
+using Infra.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +13,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<DBContext>();
+builder.Services.AddScoped<IFraseRomanticaServices, FraseRomanticaServices>();
+builder.Services.AddScoped<IFraseRepository, FraseRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
