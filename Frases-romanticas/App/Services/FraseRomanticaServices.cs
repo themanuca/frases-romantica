@@ -1,6 +1,7 @@
 ﻿using App.Interfaces;
 using Domain.Entities.Models;
 using Domain.Interfaces;
+using Domain.Messaging;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,12 @@ namespace App.Services
     public class FraseRomanticaServices : IFraseRomanticaServices
     {
         private readonly IFraseRepository _fraseRepository;
+        private readonly IFraseProducer _producer;
 
-        public FraseRomanticaServices(IFraseRepository fraseRepository)
+        public FraseRomanticaServices(IFraseRepository fraseRepository, IFraseProducer fraseProducer)
         {
             _fraseRepository = fraseRepository;
+            _producer = fraseProducer;
         }
         public async Task<int> CriarAsync(FraseRomantica frase)
         {
@@ -37,6 +40,7 @@ namespace App.Services
                 {
                     throw new ArgumentException("Frase não gravada"); 
                 }
+                _producer.Publicar(frase.Texto);
                 return result;
             }
             catch (Exception ex)
