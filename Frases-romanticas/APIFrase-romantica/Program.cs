@@ -1,8 +1,10 @@
 using App.Interfaces;
 using App.Services;
 using Domain.Interfaces;
+using Domain.Messaging;
 using Infra.Configuration;
 using Infra.Data;
+using Infra.Messaging;
 using Infra.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,8 +19,11 @@ var rabbitSettings = builder.Configuration
     .GetSection("RabbitMQSettings")
     .Get<RabbitMQSettings>();
 builder.Services.AddSingleton<DBContext>();
+builder.Services.AddSingleton(rabbitSettings);
 builder.Services.AddScoped<IFraseRomanticaServices, FraseRomanticaServices>();
 builder.Services.AddScoped<IFraseRepository, FraseRepository>();
+builder.Services.AddSingleton<IFraseProducer, FraseProducer>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
