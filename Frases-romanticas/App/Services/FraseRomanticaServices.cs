@@ -1,4 +1,5 @@
 ﻿using App.Interfaces;
+using Contract.DTOs;
 using Domain.Entities.Models;
 using Domain.Interfaces;
 using Domain.Messaging;
@@ -22,6 +23,37 @@ namespace App.Services
             _fraseRepository = fraseRepository;
             _producer = fraseProducer;
         }
+
+        public async Task AtualizarCurtidaFrase(CurtidasFraseDTO curtidasFraseDTO)
+        {
+            if (curtidasFraseDTO.IdFrase <= 0)
+            {
+                throw new ArgumentNullException("Identificação vazia");
+            }
+            try
+            {
+                var result = await _fraseRepository.ObterPorIdAsync(curtidasFraseDTO.IdFrase);
+                if (result == null)
+                {
+                    throw new ArgumentNullException("Frase não encontrada.");
+                }
+                if(result.Curtidas >= curtidasFraseDTO.NumeroCurtidas)
+                {
+                    return;
+                }
+                var curtidaAtualizada = new FraseRomantica
+                {
+                    Id = curtidasFraseDTO.IdFrase,
+                    Curtidas = curtidasFraseDTO.NumeroCurtidas
+                };
+                await _fraseRepository.AtualizarCurtidasFrase(curtidaAtualizada);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Ocorreu um erro interno ao buscar a frase.", ex);
+            }
+        }
+
         public async Task<int> CriarAsync(FraseRomantica frase)
         {
             if (frase == null)

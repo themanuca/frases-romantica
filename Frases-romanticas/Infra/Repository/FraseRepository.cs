@@ -40,5 +40,13 @@ namespace Infra.Repository
             using var connection = _context.CreateConnection();
             return await connection.ExecuteScalarAsync<int>(sql, frase);
         }
+        public async Task AtualizarCurtidasFrase(FraseRomantica fraseCurtidaAtualizada)
+        {
+            var sql = @"Update FrasesRomanticas 
+                        set Curtidas = @Curtidas WHERE ID = @Id";
+            using var connection = _context.CreateConnection();
+            await connection.ExecuteAsync(sql, fraseCurtidaAtualizada);
+        }
+
     }
 }

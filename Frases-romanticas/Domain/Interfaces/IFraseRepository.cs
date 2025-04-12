@@ -12,5 +12,6 @@ namespace Domain.Interfaces
         Task<IEnumerable<FraseRomantica>> ObterTodasAsync();
         Task<FraseRomantica?> ObterPorIdAsync(int id);
         Task<int> CriarAsync(FraseRomantica frase);
+        Task AtualizarCurtidasFrase(FraseRomantica fraseCurtidaAtualizada);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Models;
+﻿using Contract.DTOs;
+using Domain.Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,6 @@ namespace App.Interfaces
         Task<IEnumerable<FraseRomantica>> ObterTodasAsync();
         Task<FraseRomantica?> ObterPorIdAsync(int id);
         Task<int> CriarAsync(FraseRomantica frase);
+        Task AtualizarCurtidaFrase(CurtidasFraseDTO curtidasFrase);
     }
 }

@@ -2,6 +2,7 @@
 using App.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Domain.Entities.Models;
+using Contract.DTOs;
 namespace APIFrase_romantica.Controllers
 {
     [ApiController]
@@ -41,6 +42,12 @@ namespace APIFrase_romantica.Controllers
         public async Task<IActionResult> SalvarFrase(FraseRomantica frase)
         {
             await _fraseRomanticaServices.CriarAsync(frase);
+            return Ok();
+        }
+        [HttpPut]
+        public async Task<IActionResult>AtualizarCurtidas(CurtidasFraseDTO atulizaCurtida)
+        {
+            await _fraseRomanticaServices.AtualizarCurtidaFrase(atulizaCurtida);
             return Ok();
         }
     }
