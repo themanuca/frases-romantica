@@ -8,6 +8,6 @@ namespace Domain.Messaging
 {
     public interface IFraseProducer
     {
-        void Publicar(string mensagem);
+        Task Publicar(string mensagem);
     }
 }

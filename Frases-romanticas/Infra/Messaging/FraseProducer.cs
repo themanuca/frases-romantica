@@ -12,12 +12,38 @@ namespace Infra.Messaging
 {
     public class FraseProducer : IFraseProducer
     {
-        private readonly IModel _channel;
-        private readonly IConnection _connection;
+        private  IChannel _channel;
+        private  IConnection _connection;
         private readonly RabbitMQSettings _settings;
         public FraseProducer(RabbitMQSettings rabbitMQSettings)
         {
             _settings = rabbitMQSettings;
+            InitializeRabbitMQ();
+        }
+        public async Task Publicar(string mensagem)
+        {
+            try
+            {
+                var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(mensagem));
+
+                await _channel.BasicPublishAsync(exchange: "",
+                                      routingKey: _settings.QueueName,
+                                      body: body);
+            }catch(Exception ex)
+            {
+                throw new ArgumentException("Falha ao publicar mensagem no RabbitMQ", ex);
+            }
+          
+        }
+
+        public void Dispose()
+        {
+            _channel?.Dispose();
+            _connection?.Dispose();
+        }
+
+        public async Task InitializeRabbitMQ()
+        {
             var factory = new ConnectionFactory
             {
                 HostName = _settings.HostName,
@@ -25,29 +51,14 @@ namespace Infra.Messaging
                 Password = _settings.Password
             };
 
-            _connection = factory.CreateConnection();
-            _channel = _connection.CreateModel();
+            _connection = await factory.CreateConnectionAsync();
+            _channel = await _connection.CreateChannelAsync(); 
 
-            _channel.QueueDeclare(queue: _settings.QueueName,
-                                  durable: false,
+           await _channel.QueueDeclareAsync(queue: _settings.QueueName,
+                                  durable: true,
                                   exclusive: false,
                                   autoDelete: false,
                                   arguments: null);
-            }
-        public void Publicar(string mensagem)
-        {
-            var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(mensagem));
-
-            _channel.BasicPublish(exchange: "",
-                                  routingKey: _settings.QueueName,
-                                  basicProperties: null,
-                                  body: body);
-        }
-
-        public void Dispose()
-        {
-            _channel?.Dispose();
-            _connection?.Dispose();
         }
     }
 }
