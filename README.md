@@ -40,3 +40,74 @@ CREATE TABLE FrasesRomanticas (
 );
 
 ```
+## Clean Arquiteture e DDD
+Pensando nas boas praticas, o projeto acabou sendo um caso de estudo e pratica para uma arquitetura mais limpa e um Dominio forte e solitario.
+--------------------
+APP: Services e suas Interaces;
+CONTRACT: DTOs;
+DOMAIN: Entidades/Models, Interfaces do Repositorio, Interfaces do Publisher e Consumer (RABBITMQ);
+INFRA: Configuração do Rabbitmq, DBContext (DAPPER OU EF), Implementação do Publisher e Consumer, Implementação do Repositorio;
+API: Programs, appsettings e Controllers;
+----------------------
+O Projeto é pequeno para a implementação do Clean Arqu mas esta servindo como objeto de estudo. 
+
+## RABBITMQ 
+Rabbitmq se encontra rodando no docker para facilitar o desenvolvimento. A implementação do Rabbitmq e sua configuração se encontra na camada de INFRA. 
+No Dominio foi criado apenas sua interface que implementar o método Publicar. 
+Segue o padrão do Marcortatti, a  criação da fila (publisher).
+```
+public class FraseProducer : IFraseProducer
+{
+    private  IChannel _channel;
+    private  IConnection _connection;
+    private readonly RabbitMQSettings _settings;
+    public FraseProducer(RabbitMQSettings rabbitMQSettings)
+    {
+        _settings = rabbitMQSettings;
+        InitializeRabbitMQ();
+    }
+    public async Task Publicar(string mensagem)
+    {
+        try
+        {
+            var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(mensagem));
+
+            await _channel.BasicPublishAsync(exchange: "",
+                                  routingKey: _settings.QueueName,
+                                  body: body);
+        }catch(Exception ex)
+        {
+            throw new ArgumentException("Falha ao publicar mensagem no RabbitMQ", ex);
+        }
+      
+    }
+
+    public void Dispose()
+    {
+        _channel?.Dispose();
+        _connection?.Dispose();
+    }
+
+    public async Task InitializeRabbitMQ()
+    {
+        var factory = new ConnectionFactory
+        {
+            HostName = _settings.HostName,
+            UserName = _settings.UserName,
+            Password = _settings.Password
+        };
+
+        _connection = await factory.CreateConnectionAsync();
+        _channel = await _connection.CreateChannelAsync(); 
+
+       await _channel.QueueDeclareAsync(queue: _settings.QueueName,
+                              durable: true,
+                              exclusive: false,
+                              autoDelete: false,
+                              arguments: null);
+    }
+}
+```
+## Tratamento de erro e os uso incorreots das Exception 
+Sim, eu sei. Isso será ajustado mais para frente. Estou focando nas implementação das regras e funcionalidades. 
+Mas sei que é essa parte é muito importante para as boas praticas.
