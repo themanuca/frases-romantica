@@ -111,3 +111,5 @@ public class FraseProducer : IFraseProducer
 ## Tratamento de erro e os uso incorreots das Exception 
 Sim, eu sei. Isso será ajustado mais para frente. Estou focando nas implementação das regras e funcionalidades. 
 Mas sei que é essa parte é muito importante para as boas praticas.
+
+## ainda 
